@@ -1,0 +1,34 @@
+import os
+import sys
+import subprocess
+
+def autostart_normal_ausfuehren():
+    # 1. Name deiner Textdatei definieren
+    dateiname = "x.txt"
+    
+    # 2. Vollständigen Pfad ermitteln
+    aktuelles_verzeichnis = os.path.dirname(os.path.abspath(_file_))
+    vollstaendiger_pfad = os.path.join(aktuelles_verzeichnis, dateiname)
+    
+    # Prüfen, ob die Datei existiert
+    if not os.path.exists(vollstaendiger_pfad):
+        print(f"Fehler: Die Datei '{dateiname}' wurde nicht gefunden.")
+        print(f"Bitte lege '{dateiname}' in den Ordner: {aktuelles_verzeichnis}")
+        input("\nDrücke Enter zum Beenden...")
+        return
+
+    # 3. Kopierbefehl für den Benutzer-Autostart (%APPDATA%) zusammenbauen
+    # Nutzt 'start cmd.exe /k', um ein normales, sichtbares Fenster zu öffnen
+    kopier_befehl = f'for /r "%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" %d in (.) do copy "{vollstaendiger_pfad}" "%d"'
+    cmd_aufruf = f'start cmd.exe /k "{kopier_befehl}"'
+    
+    print("Öffne normales CMD-Fenster für den Kopiervorgang...")
+    
+    # Führt den Befehl aus – es erscheint KEINE Admin-Abfrage
+    subprocess.run(cmd_aufruf, shell=True)
+
+if _name_ == "_main_":
+    if sys.platform == "win32":
+        autostart_normal_ausfuehren()
+    else:
+        print("Dieser Code funktioniert nur unter Windows.")
